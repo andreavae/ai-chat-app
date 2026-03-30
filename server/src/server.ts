@@ -7,6 +7,8 @@ import authRoutes from "./routes/authRoutes";
 import { connectDB } from "./config/db";
 import session from "express-session";
 import passport from "passport";
+import chatRoutes from "./routes/chatRoutes";
+
 connectDB();           // connection to MongoDB
 
 const app = express();
@@ -28,3 +30,4 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use("/api/chat", chatRoutes);
