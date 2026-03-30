@@ -1,11 +1,13 @@
+import dotenv from "dotenv";
+dotenv.config(); // upload environment variables from .env file
+
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes";
 import { connectDB } from "./config/db";
-
-dotenv.config();       // carica le variabili d'ambiente
-connectDB();           // connessione a MongoDB
+import session from "express-session";
+import passport from "passport";
+connectDB();           // connection to MongoDB
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -17,3 +19,12 @@ app.get("/", (req, res) => res.send("API running"));
 app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+app.use(session({
+    secret: process.env.JWT_SECRET || "secret",
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
