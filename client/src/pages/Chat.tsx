@@ -1,39 +1,66 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
+import ChatBox from "../components/Chatbox";
 import InputBox from "../components/InputBox";
 import API from "../services/api";
-import ChatBox from "../components/Chatbox";
-
-type MessageType = {
-    text: string;
-    isUser: boolean;
-};
 
 const Chat = () => {
-    const [messages, setMessages] = useState<MessageType[]>([]);
+    const [messages, setMessages] = useState<any[]>([]);
+    const [conversationId, setConversationId] = useState<string | null>(null);
+    const [params] = useSearchParams();
+    const navigate = useNavigate();
+
+    // ✅ Salva il token dal URL
+    useEffect(() => {
+        const token = params.get("token");
+        if (token) {
+            localStorage.setItem("token", token);
+            // Pulisci l'URL dal token
+            window.history.replaceState({}, document.title, "/chat");
+        } else {
+            // Se non c'è token, reindirizza al login
+            const storedToken = localStorage.getItem("token");
+            if (!storedToken) {
+                navigate("/");
+            }
+        }
+    }, [params, navigate]);
+
+    const loadConversation = async (id: string) => {
+        const token = localStorage.getItem("token");
+        const res = await API.get(`/chat/${id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        setMessages(res.data.messages);
+        setConversationId(id);
+    };
 
     const sendMessage = async (text: string) => {
-        const newMessages = [...messages, { text, isUser: true }];
-        setMessages(newMessages);
+        const token = localStorage.getItem("token");
+        const res = await API.post("/chat", {
+            message: text,
+            conversationId,
+        }, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
 
-        try {
-            const res = await API.post("/chat", {
-                message: text,
-                history: newMessages, // 👈 context window
-            });
-
-            setMessages([
-                ...newMessages,
-                { text: res.data.reply, isUser: false },
-            ]);
-        } catch (err) {
-            console.error(err);
-        }
+        setMessages(res.data.messages);
+        setConversationId(res.data.conversationId);
     };
 
     return (
-        <div className="flex flex-col h-screen">
-            <ChatBox messages={messages} />
-            <InputBox onSend={sendMessage} />
+        <div className="flex h-screen">
+            <Sidebar onSelect={loadConversation} />
+            <div className="flex flex-col flex-1">
+                <ChatBox
+                    messages={messages.map((m) => ({
+                        text: m.content,
+                        isUser: m.role === "user",
+                    }))}
+                />
+                <InputBox onSend={sendMessage} />
+            </div>
         </div>
     );
 };

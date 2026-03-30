@@ -1,16 +1,29 @@
-import axios from "axios";
+import axios from 'axios';
 
 const API = axios.create({
-    baseURL: "http://localhost:5000/api",
+    baseURL: 'http://localhost:5000/api',
+    withCredentials: true,
 });
 
-// aggiunge JWT automaticamente
-API.interceptors.request.use((req) => {
-    const token = localStorage.getItem("token");
+// ✅ Interceptor per aggiungere token automaticamente
+API.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
     if (token) {
-        req.headers.Authorization = `Bearer ${token}`;
+        config.headers.Authorization = `Bearer ${token}`;
     }
-    return req;
+    return config;
 });
+
+// ✅ Interceptor per gestire errori 401 (non autenticato)
+API.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            localStorage.removeItem('token');
+            window.location.href = '/';
+        }
+        return Promise.reject(error);
+    }
+);
 
 export default API;

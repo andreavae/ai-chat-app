@@ -25,7 +25,7 @@ router.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ error: "Invalid credentials" });
+        if (!user || !user.password) return res.status(400).json({ error: "Invalid credentials" });
         const valid = await bcrypt.compare(password, user.password);
         if (!valid) return res.status(400).json({ error: "Invalid credentials" });
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, { expiresIn: "1h" });
@@ -43,7 +43,7 @@ router.get(
     passport.authenticate("google", { session: false }),
     (req, res) => {
         const token = jwt.sign({ id: (req.user as any)._id }, process.env.JWT_SECRET!, { expiresIn: "1h" });
-        res.json({ token, email: (req.user as any).email });
+        res.redirect(`http://localhost:5173/chat?token=${token}`);
     }
 );
 
@@ -55,8 +55,7 @@ router.get(
     passport.authenticate("facebook", { session: false }),
     (req, res) => {
         const token = jwt.sign({ id: (req.user as any)._id }, process.env.JWT_SECRET!, { expiresIn: "1h" });
-        res.json({ token, email: (req.user as any).email });
-    }
+        res.redirect(`http://localhost:5173/chat?token=${token}`);    }
 );
 
 export default router;

@@ -7,7 +7,7 @@ import authRoutes from "./routes/authRoutes";
 import { connectDB } from "./config/db";
 import session from "express-session";
 import passport from "passport";
-import chatRoutes from "./routes/chatRoutes";
+import chatRoutes from "./routes/chatRouter";
 
 connectDB();           // connection to MongoDB
 
