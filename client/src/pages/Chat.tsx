@@ -50,11 +50,11 @@ const Chat = () => {
                    <div className="flex items-center gap-3">
                        <div className={`w-2 h-2 rounded-full ${conversationId ? 'bg-green-500' : 'bg-blue-500'}`}></div>
                        <h1 className="text-xl font-semibold text-gray-800 truncate">
-                         {conversationId ? `Conversazione: ${conversationId.slice(-4)}` : "Nuova Conversazione"}
+                         {conversationId ? `Conversation: ${conversationId.slice(-4)}` : "New Conversation"}
                        </h1>
                    </div>
                    <div className="text-sm border py-1 px-3 rounded-full text-gray-500 bg-gray-50 font-medium">
-                       Status: {conversationId ? 'Attiva' : 'Pronta'}
+                       Status: {conversationId ? 'Active' : 'Ready'}
                    </div>
                 </header>
 
