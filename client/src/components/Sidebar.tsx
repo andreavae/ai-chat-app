@@ -69,21 +69,21 @@ const Sidebar = ({ onSelect, onNewChat, onDeleteChat, refreshTrigger, currentId 
             {chatToDelete && (
                 <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
                     <div className="bg-gray-800 text-white rounded-xl shadow-2xl p-6 max-w-sm w-full border border-gray-700">
-                        <h3 className="text-xl font-bold mb-2">Conferma Eliminazione</h3>
-                        <p className="text-gray-300 mb-6 text-sm">Sei sicuro di voler eliminare questa conversazione? Questa operazione è irreversibile.</p>
+                        <h3 className="text-xl font-bold mb-2">Delete Chat</h3>
+                        <p className="text-gray-300 mb-6 text-sm">Are you sure you want to permanently delete this chat? This action cannot be undone.</p>
                         <div className="flex justify-end gap-3">
                             <button 
                                 onClick={() => setChatToDelete(null)}
                                 className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium rounded-lg transition-colors"
                             >
-                                Annulla
+                                Cancel
                             </button>
                             <button 
                                 onClick={executeDelete}
                                 className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-sm font-medium rounded-lg transition-colors shadow-md flex items-center gap-2"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                Elimina
+                                Delete
                             </button>
                         </div>
                     </div>
