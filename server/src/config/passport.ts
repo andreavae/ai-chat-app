@@ -46,6 +46,9 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
             }
         )
     );
+    console.log("✅ Google OAuth Configured");
+} else {
+    console.log("❌ Google OAuth Missing Credentials in .env");
 }
 
 // ===== FACEBOOK STRATEGY =====
@@ -82,6 +85,9 @@ if (process.env.FB_APP_ID && process.env.FB_APP_SECRET) {
             }
         )
     );
+    console.log("✅ Facebook OAuth Configured");
+} else {
+    console.log("❌ Facebook OAuth Missing Credentials in .env");
 }
 
 export default passport;
