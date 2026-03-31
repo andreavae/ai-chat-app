@@ -20,6 +20,18 @@ const Chat = () => {
         setConversationId(null);
     };
 
+    const handleDeleteChat = async (id: string) => {
+        try {
+            await API.delete(`/chat/${id}`);
+            setRefreshTrigger(prev => prev + 1);
+            if (conversationId === id) {
+                startNewChat();
+            }
+        } catch (error) {
+            console.error("Failed to delete chat", error);
+        }
+    };
+
     const sendMessage = async (text: string) => {
         const res = await API.post("/chat", {
             message: text,
@@ -40,6 +52,7 @@ const Chat = () => {
             <Sidebar 
                 onSelect={loadConversation} 
                 onNewChat={startNewChat}
+                onDeleteChat={handleDeleteChat}
                 refreshTrigger={refreshTrigger}
                 currentId={conversationId}
             />

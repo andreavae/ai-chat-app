@@ -30,4 +30,17 @@ router.get("/:id", async (req, res) => {
     res.json(conversation);
 });
 
+// elimina singola conversazione dell'utente
+router.delete("/:id", async (req, res) => {
+    const userId = (req as any).user.id;
+    const Conversation = (await import("../models/Conversation")).default;
+    const conversation = await Conversation.findOneAndDelete({ _id: req.params.id, userId });
+    
+    if (!conversation) {
+        return res.status(404).json({ error: "Conversation not found" });
+    }
+    
+    res.json({ message: "Chat deleted" });
+});
+
 export default router;
